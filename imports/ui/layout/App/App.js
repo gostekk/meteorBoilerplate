@@ -5,8 +5,13 @@ import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 
 // Components
+import AppRoute from '../../components/AppRoute/AppRoute';
 import Authenticated from '../../components/Authenticated/Authenticated';
 import Public from '../../components/Public/Public';
+
+// Layouts
+import NoLayout from '../NoLayout/NoLayout';
+import NavLayout from '../NavLayout/NavLayout';
 
 // Public
 import Login from '../../pages/Login/Login';
@@ -24,12 +29,15 @@ const App = (props) => (
   <Router>
     <div>
       <Switch>
-        <Route exact name="index" path="/" component={Index} />
-        <Public exact path="/login" redirectPath="/" component={Login} {...props} />
-        <Public exact path="/register" component={Register} {...props} />
+        <Route exact name="index" path="/" render={() => <Redirect to="login" />} />
 
-        <Authenticated exact path="/adduser" component={AddUser} {...props} />
-        <Authenticated exact path="/users" component={UsersList} {...props} />
+        <Public exact path="/login" redirectPath="/app" component={Login} {...props} />
+        <Public exact path="/register" redirectPath="/app" component={Register} {...props} />
+
+        <AppRoute exact path="/app" layout={NavLayout} component={Index} {...props} />
+        
+        <AppRoute exact path="/adduser" layout={NavLayout} component={AddUser} {...props} />
+        <AppRoute exact path="/users" layout={NavLayout} component={UsersList} {...props} />
 
         <Route path="*" component={NotFound} />
       </Switch>
