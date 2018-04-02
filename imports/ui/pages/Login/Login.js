@@ -3,41 +3,45 @@ import { Link, Redirect } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
+import { Roles } from 'meteor/alanning:roles';
 
 export class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       error: '',
-      email: '',
+      username: '',
       password: '',
     };
-    this.onEmailChange = this.onEmailChange.bind(this);
+    this.onUsernameChange = this.onUsernameChange.bind(this);
     this.onPasswordChange = this.onPasswordChange.bind(this);
   }
 
   onSubmit(e) {
     e.preventDefault();
 
-    const email = this.state.email.trim();
+    const username = this.state.username.trim();
     const password = this.state.password.trim();
 
-    this.props.loginWithPassword({ email }, password, (err) => {
+    this.props.loginWithPassword({ username }, password, (err) => {
       if (err) {
         if(err.reason === 'Incorrect password') {
           this.setState({ error: err.reason, password: '' });
         } else {
-          this.setState({ error: err.reason, email: '', password: '' });
+          this.setState({ error: err.reason, username: '', password: '' });
         }
       } else {
-        this.setState({ error: '', email: '', password: '' });
+        if (Roles.userIsInRole(Meteor.userId(), 'delete')){
+          Meteor.logout();
+        }
+        this.setState({ error: '', username: '', password: '' });
       }
     });
   }
 
-  onEmailChange(e) {
+  onUsernameChange(e) {
     this.setState({
-      email: e.target.value,
+      username: e.target.value,
     });
   }
 
@@ -57,12 +61,12 @@ export class Login extends React.Component {
 
           <form className="boxed-view__form" onSubmit={this.onSubmit.bind(this)} noValidate>
             <input
-              type="email"
-              ref={ref => this.loginEmail = ref}
-              name="email"
+              type="text"
+              ref={ref => this.loginUsername = ref}
+              name="username"
               placeholder="Email"
-              value={ this.state.email }
-              onChange={ this.onEmailChange }
+              value={ this.state.username }
+              onChange={ this.onUsernameChange }
             />
             <input
               type="password"

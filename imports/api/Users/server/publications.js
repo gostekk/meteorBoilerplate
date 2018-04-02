@@ -6,7 +6,7 @@ Meteor.publish("usersList", function () {
     {
       fields: {
         emails: 1,
-        profile: 1,
+        username: 1,
         roles: 1,
       }
     });

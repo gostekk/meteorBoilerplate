@@ -2,15 +2,15 @@ import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import SimpleSchema from 'simpl-schema';
 
-export const onCreateUser = (options, user) => {
-  if ( options.profile ) {
-    user.info = options.profile;
-  }
+// export const onCreateUser = (options, user) => {
+//   if ( options.profile ) {
+//     user.info = options.profile;
+//   }
+//
+//   return user;
+// }
 
-  return user;
-}
-
-Accounts.onCreateUser(onCreateUser);
+// Accounts.onCreateUser(onCreateUser);
 
 export const validateNewUser = (user) => {
 
@@ -20,6 +20,7 @@ export const validateNewUser = (user) => {
     email: {
       type: String,
       regEx: SimpleSchema.RegEx.Email,
+      optional: true,
     },
   }).validate({ email });
 

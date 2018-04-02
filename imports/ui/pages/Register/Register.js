@@ -8,10 +8,10 @@ class Register extends React.Component {
     super(props);
     this.state = {
       error: '',
+      username: '',
       email: '',
       password: '',
       repassword: '',
-      nameDisplayed: '',
       admin: true,
     };
   }
@@ -19,11 +19,16 @@ class Register extends React.Component {
   onSubmit(e) {
     e.preventDefault();
 
+    const username = this.state.username.trim();
     const email = this.state.email.trim();
     const password = this.state.password.trim();
     const repassword = this.state.repassword.trim();
 
     const admin = this.state.admin ? false : true;
+
+    if (username.length < 6) {
+      return this.setState({ error: 'Username is too short', password: '', repassword: ''})
+    }
 
     if (!(password === repassword)) {
       return this.setState({ error: 'Passwords are not identical!', password: '', repassword: ''})
@@ -33,15 +38,11 @@ class Register extends React.Component {
       return this.setState({ error: 'Password must me more than 8 characters long.', password: '' })
     }
 
-    const profile = {
-      nameDisplayed : this.state.nameDisplayed.trim(),
-    };
-
     const roles = {
       admin,
     };
 
-    Meteor.call('user.register', {email, password, profile}, roles, (err, res) => {
+    Meteor.call('user.register', {email, password, username}, roles, (err, res) => {
       if (err) {
         this.setState({
           error: err.reason,
@@ -51,10 +52,10 @@ class Register extends React.Component {
       } else {
         this.setState({
           error: '',
+          username: '',
           email: '',
           password: '',
           repassword: '',
-          nameDisplayed: '',
           admin: true,
         });
         console.log('User registered');
@@ -71,6 +72,14 @@ class Register extends React.Component {
           {this.state.error ? <p>{this.state.error}</p> : undefined}
 
           <form onSubmit={this.onSubmit.bind(this)} noValidate>
+            <input
+              type="text"
+              ref="username"
+              name="username"
+              placeholder="username"
+              value={ this.state.username }
+              onChange={ (e) => this.setState({username: e.target.value}) }
+            />
             <input
               type="email"
               ref="email"
@@ -94,14 +103,6 @@ class Register extends React.Component {
               placeholder="Password confirm"
               value={ this.state.repassword }
               onChange={ (e) => this.setState({repassword: e.target.value}) }
-            />
-            <input
-              type="text"
-              ref="nameDisplayed"
-              name="nameDisplayed"
-              placeholder="Name displayed"
-              value={ this.state.nameDisplayed }
-              onChange={ (e) => this.setState({nameDisplayed: e.target.value}) }
             />
             <label>
               <input

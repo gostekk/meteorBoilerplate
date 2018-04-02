@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 const UsersListItem = ({user}) => {
   return (
     <div>
-      email: { user.emails[0].address }
+      username: { user.username
+        ? user.username
+        : 'Undefined' }
       <br />
-      nameDisplayed: { user.profile
-        ? user.profile.nameDisplayed
+      email: { user.emails[0].address
+        ? user.emails[0].address
         : 'Undefined' }
       <br />
       roles: { user.roles

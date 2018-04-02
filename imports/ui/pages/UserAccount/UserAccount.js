@@ -6,7 +6,10 @@ const UserAccount = (props) => {
   return (
     <div>
       edit user<br/>
-      <button onClick={() => window.confirm('Are you sure?') ? Meteor.call('user.toDelete', props.userId) : console.log('nope')} >delete account</button>
+      <button onClick={() => window.confirm('Are you sure?')
+        ? (Meteor.call('user.toDelete', props.userId, () => Meteor.logout()) )
+        : console.log('nope')
+      }>delete account</button>
       <br/>
       UserAccount<br/>
       <br/>
