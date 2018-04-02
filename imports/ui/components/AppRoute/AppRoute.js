@@ -5,7 +5,7 @@ const AppRoute = ({ component: Component, layout: Layout, authenticated, ...rest
   <Route {...rest} render={props => (
     authenticated ?
       <Layout>
-        <Component {...props} />
+        <Component {...props} userId={rest.userId} />
       </Layout>
     : <Redirect to="/login" />
   )} />

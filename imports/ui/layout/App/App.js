@@ -17,12 +17,15 @@ import NavLayout from '../NavLayout/NavLayout';
 import Login from '../../pages/Login/Login';
 import Register from '../../pages/Register/Register';
 
-// Authenticated
+// Admin
 import AddUser from '../../pages/AddUser/AddUser';
 import UsersList from '../../pages/UsersList/UsersList';
 
-// Route
+// User
 import Index from '../../pages/Index/Index';
+import UserAccount from '../../pages/UserAccount/UserAccount';
+
+// Else
 import NotFound from '../../pages/NotFound/NotFound';
 
 const App = (props) => (
@@ -35,7 +38,8 @@ const App = (props) => (
         <Public exact path="/register" redirectPath="/app" component={Register} {...props} />
 
         <AppRoute exact path="/app" layout={NavLayout} component={Index} {...props} />
-        
+        <AppRoute exact path="/account" layout={NavLayout} component={UserAccount} {...props} />
+
         <AppRoute exact path="/adduser" layout={NavLayout} component={AddUser} {...props} />
         <AppRoute exact path="/users" layout={NavLayout} component={UsersList} {...props} />
 

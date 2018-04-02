@@ -13,6 +13,8 @@ class Index extends React.Component {
         <br />
         <Link to="/users">Users</Link>
         <br />
+        <Link to="/account">MyAccount</Link>
+        <br />
         <a nohref="true" onClick={() => Accounts.logout()}>Logout</a>
       </div>
     );
