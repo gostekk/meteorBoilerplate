@@ -10,7 +10,7 @@ Meteor.methods({
     const id = Accounts.createUser(user);
 
     if(roles.admin) {
-      Roles.addUsersToRoles(id, 'admin', Roles.GLOBAL_GROUP);
+      Roles.addUsersToRoles(id, 'admin');
     }
   },
 
@@ -22,13 +22,13 @@ Meteor.methods({
     const id = Accounts.createUser(user);
 
     if(roles.admin) {
-      Roles.addUsersToRoles(id, 'admin', Roles.GLOBAL_GROUP);
+      Roles.addUsersToRoles(id, 'admin');
     }
   },
 
   'user.toDelete': function (id) {
     if(!Roles.userIsInRole(this.userId, 'admin') && this.userId == id) {
-      Roles.addUsersToRoles(Meteor.userId(), 'delete', Roles.GLOBAL_GROUP);
+      Roles.addUsersToRoles(Meteor.userId(), 'delete');
     }
   },
 

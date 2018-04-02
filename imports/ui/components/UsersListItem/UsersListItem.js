@@ -6,10 +6,13 @@ const UsersListItem = ({user}) => {
     <div>
       email: { user.emails[0].address }
       <br />
-      nameDisplayed: { user.hasOwnProperty('profile.nameDisplayed')
+      nameDisplayed: { user.profile
         ? user.profile.nameDisplayed
         : 'Undefined' }
-
+      <br />
+      roles: { user.roles
+        ? user.roles
+        : 'Undefined' }
       <br />
       <br />
     </div>
