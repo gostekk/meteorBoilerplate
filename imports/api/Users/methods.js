@@ -40,4 +40,15 @@ Meteor.methods({
 
     Meteor.users.remove(id);
   },
+
+  'user.changeUsername': function (id, newUsername) {
+    check(id, String);
+    check(newUsername, String);
+
+    if (this.userId === newUsername) {
+      throw new Meteor.Error('New username must be different from the old one.');
+    }
+
+    Accounts.setUsername(id, newUsername);
+  },
 });

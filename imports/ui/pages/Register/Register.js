@@ -26,7 +26,7 @@ class Register extends React.Component {
 
     const admin = this.state.admin ? false : true;
 
-    if (username.length < 6) {
+    if (username.length < 5) {
       return this.setState({ error: 'Username is too short', password: '', repassword: ''})
     }
 

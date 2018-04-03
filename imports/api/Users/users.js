@@ -15,6 +15,7 @@ import SimpleSchema from 'simpl-schema';
 export const validateNewUser = (user) => {
 
   const email = user.emails[0].address;
+  const username =  user.username;
 
   new SimpleSchema({
     email: {
@@ -22,7 +23,13 @@ export const validateNewUser = (user) => {
       regEx: SimpleSchema.RegEx.Email,
       optional: true,
     },
-  }).validate({ email });
+    username: {
+      type: String,
+      min: 5,
+      max: 25,
+      required: true,
+    }
+  }).validate({ email, username });
 
   return true;
 }

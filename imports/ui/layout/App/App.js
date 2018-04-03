@@ -30,22 +30,24 @@ import NotFound from '../../pages/NotFound/NotFound';
 
 const App = (props) => (
   <Router>
-    <div>
-      <Switch>
-        <Route exact name="index" path="/" render={() => <Redirect to="login" />} />
+    {!props.loading ?  (
+      <div>
+        <Switch>
+          <Route exact name="index" path="/" render={() => <Redirect to="login" />} />
 
-        <Public exact path="/login" redirectPath="/app" component={Login} {...props} />
-        <Public exact path="/register" redirectPath="/app" component={Register} {...props} />
+          <Public exact path="/login" redirectPath="/app" component={Login} {...props} />
+          <Public exact path="/register" redirectPath="/app" component={Register} {...props} />
 
-        <AppRoute exact path="/app" layout={NavLayout} component={Index} {...props} />
-        <AppRoute exact path="/account" layout={NavLayout} component={UserAccount} {...props} />
+          <AppRoute exact path="/app" layout={NavLayout} component={Index} {...props} />
+          <AppRoute exact path="/account" layout={NavLayout} component={UserAccount} {...props} />
 
-        <AppRoute exact path="/adduser" layout={NavLayout} component={AddUser} {...props} />
-        <AppRoute exact path="/users" layout={NavLayout} component={UsersList} {...props} />
+          <AppRoute exact path="/adduser" layout={NavLayout} component={AddUser} {...props} />
+          <AppRoute exact path="/users" layout={NavLayout} component={UsersList} {...props} />
 
-        <Route path="*" component={NotFound} />
-      </Switch>
-    </div>
+          <Route path="*" component={NotFound} />
+        </Switch>
+      </div>
+    ) : ''}
   </Router>
 );
 
@@ -54,14 +56,19 @@ App.defaultProps = {
 };
 
 App.propTypes = {
+  loading: PropTypes.bool.isRequired,
   userId: PropTypes.string,
   authenticated: PropTypes.bool.isRequired,
 };
 
 export default withTracker(() => {
+  const loggingIn = Meteor.loggingIn();
   const userId = Meteor.userId();
+  const loading = !Roles.subscription.ready();
   return {
-    authenticated: !!userId,
+    loading,
+    loggingIn,
+    authenticated: !loggingIn && !!userId,
     userId,
   };
 })(App);
