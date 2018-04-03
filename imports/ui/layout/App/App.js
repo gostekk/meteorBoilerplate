@@ -12,12 +12,14 @@ import Public from '../../components/Public/Public';
 // Layouts
 import NoLayout from '../NoLayout/NoLayout';
 import NavLayout from '../NavLayout/NavLayout';
+import AdmLayout from '../AdmLayout/AdmLayout';
 
 // Public
 import Login from '../../pages/Login/Login';
 import Register from '../../pages/Register/Register';
 
 // Admin
+import Admin from '../../pages/Admin/Admin';
 import AddUser from '../../pages/AddUser/AddUser';
 import UsersList from '../../pages/UsersList/UsersList';
 
@@ -38,11 +40,12 @@ const App = (props) => (
           <Public exact path="/login" redirectPath="/app" component={Login} {...props} />
           <Public exact path="/register" redirectPath="/app" component={Register} {...props} />
 
-          <AppRoute exact path="/app" layout={NavLayout} component={Index} {...props} />
-          <AppRoute exact path="/account" layout={NavLayout} component={UserAccount} {...props} />
+          <AppRoute exact path="/app" layout={NavLayout} adminOnly={false} component={Index} {...props} />
+          <AppRoute exact path="/account" layout={NavLayout} adminOnly={false} component={UserAccount} {...props} />
 
-          <AppRoute exact path="/adduser" layout={NavLayout} component={AddUser} {...props} />
-          <AppRoute exact path="/users" layout={NavLayout} component={UsersList} {...props} />
+          <AppRoute exact path="/admin" layout={AdmLayout} adminOnly={true} component={Admin} {...props} />
+          <AppRoute exact path="/adduser" layout={AdmLayout} adminOnly={true} component={AddUser} {...props} />
+          <AppRoute exact path="/users" layout={AdmLayout}  adminOnly={true} component={UsersList} {...props} />
 
           <Route path="*" component={NotFound} />
         </Switch>

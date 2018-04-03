@@ -4,7 +4,7 @@ import NavigationUser from '../../components/NavigationUser/NavigationUser';
 
 const NavLayout = props => (
   <div>
-    <NavigationUser />
+    <NavigationUser {...props.children.props}/>
     {props.children}
   </div>
 )

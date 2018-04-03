@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
-const NavigationUser = () => {
+const NavigationUser = (props) => {
   return (
     <nav>
       <div>
@@ -10,15 +10,25 @@ const NavigationUser = () => {
             Home
           </button>
         </NavLink>
+        
+      </div>
 
-        <NavLink to="/users" activeClassName="selected">
+      <div className="pull-right">
+        { props.authenticated
+          ? (<NavLink to="/admin" activeClassName="selected">
+            <button>
+              Admin
+            </button>
+          </NavLink>)
+          : undefined
+        }
+
+        <NavLink to="/account" activeClassName="selected">
           <button>
-            Users
+            My Account
           </button>
         </NavLink>
-      </div>
-      
-      <div className="pull-right">
+
         <button onClick={() => Accounts.logout()}>Logout</button>
       </div>
     </nav>
