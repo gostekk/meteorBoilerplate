@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { Roles } from 'meteor/alanning:roles';
 
 const NavigationUser = (props) => {
   return (
@@ -10,11 +11,11 @@ const NavigationUser = (props) => {
             Home
           </button>
         </NavLink>
-        
+
       </div>
 
       <div className="pull-right">
-        { props.authenticated
+        { Roles.userIsInRole(props.userId, 'admin')
           ? (<NavLink to="/admin" activeClassName="selected">
             <button>
               Admin
