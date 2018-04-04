@@ -16,6 +16,11 @@ const UsersListItem = ({user}) => {
         ? user.roles
         : 'Undefined' }
       <br />
+      <button onClick={() => window.confirm('Are you sure?')
+        ? (Meteor.call('user.delete', user._id))
+        : console.log('nope')
+      }>delete account</button>
+      <br />
       <br />
     </div>
   );
