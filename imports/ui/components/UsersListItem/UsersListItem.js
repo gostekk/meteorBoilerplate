@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import UserSetPassword from '../UserSetPassword/UserSetPassword';
+
 const UsersListItem = ({user}) => {
   return (
     <div>
@@ -15,6 +17,8 @@ const UsersListItem = ({user}) => {
       roles: { user.roles
         ? user.roles
         : 'Undefined' }
+      <br />
+      <UserSetPassword id={user._id} />
       <br />
       <button onClick={() => window.confirm('Are you sure?')
         ? (Meteor.call('user.delete', user._id))

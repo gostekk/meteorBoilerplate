@@ -51,4 +51,14 @@ Meteor.methods({
 
     Accounts.setUsername(id, newUsername);
   },
+
+  'user.setPassword': function (id, newPass) {
+    if (!Roles.userIsInRole(this.userId, 'admin')) {
+     throw new Meteor.Error('not-authorized', 'Must be authorized to add new user!');
+    }
+    check(id, String);
+    check(newPass, String);
+
+    Accounts.setPassword(id, newPass);
+  },
 });
