@@ -14,11 +14,13 @@ const UsersListItem = ({user}) => {
         ? user.emails[0].address
         : 'Undefined' }
       <br />
-      roles: { user.roles
+      roles: { user.roles && (user.roles.length > 0)
         ? user.roles
         : 'Undefined' }
       <br />
       <UserSetPassword id={user._id} />
+      <br />
+      <button onClick={ () => Meteor.call('user.adminPerm', user._id)}>Add admin permissions</button>
       <br />
       <button onClick={() => window.confirm('Are you sure?')
         ? (Meteor.call('user.delete', user._id))

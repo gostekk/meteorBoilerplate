@@ -16,7 +16,7 @@ Meteor.methods({
 
   'user.add': function (user, roles) {
     if (!Roles.userIsInRole(this.userId, 'admin')) {
-     throw new Meteor.Error('not-authorized', 'Must be authorized to add new user!');
+      throw new Meteor.Error('not-authorized', 'Must be authorized to add new user!');
     }
 
     const id = Accounts.createUser(user);
@@ -34,7 +34,7 @@ Meteor.methods({
 
   'user.delete': function (id) {
     if (!Roles.userIsInRole(this.userId, 'admin')) {
-     throw new Meteor.Error('not-authorized', 'Must be authorized to add new user!');
+      throw new Meteor.Error('not-authorized', 'Must be authorized to add new user!');
     }
     check(id, String);
 
@@ -54,11 +54,25 @@ Meteor.methods({
 
   'user.setPassword': function (id, newPass) {
     if (!Roles.userIsInRole(this.userId, 'admin')) {
-     throw new Meteor.Error('not-authorized', 'Must be authorized to add new user!');
+      throw new Meteor.Error('not-authorized', 'Must be authorized to add new user!');
     }
     check(id, String);
     check(newPass, String);
 
     Accounts.setPassword(id, newPass);
+  },
+
+  'user.adminPerm': function (id) {
+    if (!Roles.userIsInRole(this.userId, 'admin')) {
+      throw new Meteor.Error('not-authorized', 'Must be authorized to add new user!');
+    } else if (this.userId === id) {
+      throw new Meteor.Error('method-not-allowed', 'Must be authorized to add new user!');
+    }
+
+    if(!Roles.userIsInRole(id, 'admin')) {
+      Roles.addUsersToRoles(id, 'admin');
+    } else {
+      Roles.removeUsersFromRoles(id, 'admin');
+    }
   },
 });
