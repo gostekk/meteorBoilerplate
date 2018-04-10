@@ -71,11 +71,18 @@ if (Meteor.isServer) {
   });
 
   describe('userMethods', function () {
-    const testUser = {
-      email: 'test@example.com',
-      password: 'password123',
+    const adminUser = {
+      email: 'admin@testing',
+      password: 'testAdmin',
+      username: 'testAdmin',
+    };
+
+    const normalUser = {
+      email: 'normal@testing',
+      password: 'testUser',
       username: 'testUser',
     };
+
     const roles = {
       admin: false
     };
@@ -86,7 +93,7 @@ if (Meteor.isServer) {
       });
 
       it('should return id of registered user', function() {
-        const id = Meteor.server.method_handlers['user.register'](testUser, roles);
+        const id = Meteor.server.method_handlers['user.register'](normalUser, roles);
         expect(id).to.be.a('string');
       });
 
@@ -95,8 +102,6 @@ if (Meteor.isServer) {
           Meteor.server.method_handlers['user.register']({}, roles);
         }).to.throw('Need to set a username or email');
       });
-
-
     });
 
     describe('user.add', function () {
@@ -105,24 +110,16 @@ if (Meteor.isServer) {
       });
 
       it('should return id of registered user', function() {
-        const adminUserId = Accounts.createUser({
-          email: 'admin@testing',
-          password: 'testAdmin',
-          username: 'testAdmin',
-        });
+        const adminUserId = Accounts.createUser(adminUser);
 
         Roles.addUsersToRoles(adminUserId, 'admin');
 
-        const id = Meteor.server.method_handlers['user.add'].apply({ userId: adminUserId }, [testUser, roles]);
+        const id = Meteor.server.method_handlers['user.add'].apply({ userId: adminUserId }, [normalUser, roles]);
         expect(id).to.be.a('string');
       });
 
       it('should fail validate user', function() {
-        const adminUserId = Accounts.createUser({
-          email: 'admin@testing',
-          password: 'testAdmin',
-          username: 'testAdmin',
-        });
+        const adminUserId = Accounts.createUser(adminUser);
 
         Roles.addUsersToRoles(adminUserId, 'admin');
 
@@ -133,24 +130,12 @@ if (Meteor.isServer) {
 
       it('should fail authorization of user', function() {
         expect(function () {
-          Meteor.server.method_handlers['user.add'](testUser, roles);
+          Meteor.server.method_handlers['user.add'](normalUser, roles);
         }).to.throw('Must be authorized to add new user!');
       });
     });
 
     describe('user.toDelete', function () {
-      const adminUser = {
-        email: 'admin@testing',
-        password: 'testAdmin',
-        username: 'testAdmin',
-      };
-
-      const normalUser = {
-        email: 'normal@testing',
-        password: 'testUser',
-        username: 'testUser',
-      };
-
       beforeEach(function () {
         resetDatabase();
       });
