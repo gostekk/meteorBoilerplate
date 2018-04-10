@@ -62,17 +62,17 @@ Meteor.methods({
     Accounts.setPassword(id, newPass);
   },
 
-  'user.adminPerm': function (id) {
+  'user.permission': function (id, permName) {
     if (!Roles.userIsInRole(this.userId, 'admin')) {
       throw new Meteor.Error('not-authorized', 'Must be authorized to add new user!');
-    } else if (this.userId === id) {
-      throw new Meteor.Error('method-not-allowed', 'Must be authorized to add new user!');
+    } else if ((this.userId === id) && (permName === 'admin')) {
+      throw new Meteor.Error('method-not-allowed', 'Can\'t revoke admin permissions!');
     }
 
-    if(!Roles.userIsInRole(id, 'admin')) {
-      Roles.addUsersToRoles(id, 'admin');
+    if(!Roles.userIsInRole(id, permName)) {
+      Roles.addUsersToRoles(id, permName);
     } else {
-      Roles.removeUsersFromRoles(id, 'admin');
+      Roles.removeUsersFromRoles(id, permName);
     }
   },
 });

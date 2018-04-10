@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import UserSetPassword from '../UserSetPassword/UserSetPassword';
+import PermissionsButton from '../PermissionsButton/PermissionsButton';
 
 const UsersListItem = ({user}) => {
   return (
@@ -20,7 +21,8 @@ const UsersListItem = ({user}) => {
       <br />
       <UserSetPassword id={user._id} />
       <br />
-      <button onClick={ () => Meteor.call('user.adminPerm', user._id)}>Add admin permissions</button>
+      <PermissionsButton id={user._id} permName='admin' />
+      <PermissionsButton id={user._id} permName='delete' />
       <br />
       <button onClick={() => window.confirm('Are you sure?')
         ? (Meteor.call('user.delete', user._id))
