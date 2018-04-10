@@ -12,18 +12,22 @@ Meteor.methods({
     if(roles.admin) {
       Roles.addUsersToRoles(id, 'admin');
     }
+
+    return id;
   },
 
   'user.add': function (user, roles) {
     if (!Roles.userIsInRole(this.userId, 'admin')) {
       throw new Meteor.Error('not-authorized', 'Must be authorized to add new user!');
     }
-
+    
     const id = Accounts.createUser(user);
 
     if(roles.admin) {
       Roles.addUsersToRoles(id, 'admin');
     }
+
+    return id;
   },
 
   'user.toDelete': function (id) {
