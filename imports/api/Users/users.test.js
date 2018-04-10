@@ -137,5 +137,40 @@ if (Meteor.isServer) {
         }).to.throw('Must be authorized to add new user!');
       });
     });
+
+    describe('user.toDelete', function () {
+      const adminUser = {
+        email: 'admin@testing',
+        password: 'testAdmin',
+        username: 'testAdmin',
+      };
+
+      const normalUser = {
+        email: 'normal@testing',
+        password: 'testUser',
+        username: 'testUser',
+      };
+
+      beforeEach(function () {
+        resetDatabase();
+      });
+
+      it('should add normalUser toDelete role', function() {
+        const normalUserId = Accounts.createUser(normalUser);
+
+        const res = Meteor.server.method_handlers['user.toDelete'].apply({ userId: normalUserId }, [normalUserId]);
+        expect(Roles.userIsInRole(normalUserId, 'delete')).to.be.true;
+      });
+
+      it('should refuse add admin toDelete role', function() {
+        const adminUserId = Accounts.createUser(adminUser);
+
+        Roles.addUsersToRoles(adminUserId, 'admin');
+
+        expect(function () {
+          Meteor.server.method_handlers['user.toDelete'].apply({ userId: adminUserId }, [adminUserId]);
+        }).to.throw('Can\'t add admin toDelete role');
+      });
+    });
   });
 }

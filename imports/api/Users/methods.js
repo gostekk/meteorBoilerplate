@@ -6,9 +6,9 @@ import { Accounts } from 'meteor/accounts-base';
 Meteor.methods({
   'user.register': function (user, roles) {
     // TODO: Create disabled account
-
     const id = Accounts.createUser(user);
 
+    // NOTE: Delete this lines
     if(roles.admin) {
       Roles.addUsersToRoles(id, 'admin');
     }
@@ -20,7 +20,7 @@ Meteor.methods({
     if (!Roles.userIsInRole(this.userId, 'admin')) {
       throw new Meteor.Error('not-authorized', 'Must be authorized to add new user!');
     }
-    
+
     const id = Accounts.createUser(user);
 
     if(roles.admin) {
@@ -31,9 +31,10 @@ Meteor.methods({
   },
 
   'user.toDelete': function (id) {
-    if(!Roles.userIsInRole(this.userId, 'admin') && this.userId == id) {
-      Roles.addUsersToRoles(Meteor.userId(), 'delete');
+    if(Roles.userIsInRole(this.userId, 'admin') && (this.userId == id)) {
+      throw new Meteor.Error('method-not-allowed', 'Can\'t add admin toDelete role');
     }
+    Roles.addUsersToRoles(this.userId, 'delete');
   },
 
   'user.delete': function (id) {
