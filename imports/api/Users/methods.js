@@ -39,7 +39,9 @@ Meteor.methods({
 
   'user.delete': function (id) {
     if (!Roles.userIsInRole(this.userId, 'admin')) {
-      throw new Meteor.Error('not-authorized', 'Must be authorized to add new user!');
+      throw new Meteor.Error('not-authorized', 'Must be authorized to delete user!');
+    } else if (this.userId === id) {
+      throw new Meteor.Error('bad-request', 'Can\'t delete yourself!');
     }
     check(id, String);
 
@@ -50,8 +52,8 @@ Meteor.methods({
     check(id, String);
     check(newUsername, String);
 
-    if (this.userId === newUsername) {
-      throw new Meteor.Error('New username must be different from the old one.');
+    if (this.user.username === newUsername) {
+      throw new Meteor.Error('bad-request', 'New username must be different from the old one.');
     }
 
     Accounts.setUsername(id, newUsername);

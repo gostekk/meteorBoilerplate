@@ -157,5 +157,73 @@ if (Meteor.isServer) {
         }).to.throw('Can\'t add admin toDelete role');
       });
     });
+
+    describe('user.delete', function () {
+      beforeEach(function () {
+        resetDatabase();
+      });
+
+      it('should delete normalUser', function() {
+        const adminUserId = Accounts.createUser(adminUser);
+        const normalUserId = Accounts.createUser(normalUser);
+
+        Roles.addUsersToRoles(adminUserId, 'admin');
+
+        expect(function() {
+          Meteor.server.method_handlers['user.delete'].apply({ userId: adminUserId }, [normalUserId]);
+        }).to.not.throw();
+      });
+
+      it('should throw authorization error', function() {
+        const normalUserId = Accounts.createUser(normalUser);
+
+        expect(function() {
+          Meteor.server.method_handlers['user.delete'].apply({ userId: normalUserId }, [normalUserId]);
+        }).to.throw('Must be authorized to delete user!');
+      });
+
+      it('should throw error for bad request', function() {
+        const adminUserId = Accounts.createUser(adminUser);
+
+        Roles.addUsersToRoles(adminUserId, 'admin');
+
+        expect(function() {
+          Meteor.server.method_handlers['user.delete'].apply({ userId: adminUserId }, [adminUserId]);
+        }).to.throw('Can\'t delete yourself!');
+      });
+    });
+
+    describe('user.changeUsername', function () {
+      beforeEach(function () {
+        resetDatabase();
+      });
+
+      it('should change username', function() {
+        const normalUserId = Accounts.createUser(normalUser);
+
+        expect(function() {
+          Meteor.server.method_handlers['user.changeUsername'].apply({ userId: normalUserId, user: normalUser }, [normalUserId, adminUser.username]);
+        }).to.not.throw();
+        expect(Accounts.findUserByUsername(adminUser.username)).to.be.an('object');
+      });
+
+      it('should throw id check error', function() {
+        expect(function() {
+          Meteor.server.method_handlers['user.changeUsername'].apply({ userId: 'userid', user: normalUser }, [{}, adminUser.username]);
+        }).to.throw('Expected string, got object');
+      });
+
+      it('should throw newUsername check error', function() {
+        expect(function() {
+          Meteor.server.method_handlers['user.changeUsername'].apply({ userId: 'userid', user: normalUser }, ['normalUserId', {}]);
+        }).to.throw('Expected string, got object');
+      });
+
+      it('should throw identical username warning', function() {
+        expect(function() {
+          Meteor.server.method_handlers['user.changeUsername'].apply({ userId: 'userid', user: normalUser }, ['normalUserId', normalUser.username]);
+        }).to.throw('New username must be different from the old one.');
+      });
+    });
   });
 }
